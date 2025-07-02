@@ -20,6 +20,7 @@ bool linked_list_register_free(void (*free)(void *))
 
 struct linked_list *linked_list_create(void)
 {
+    NULL_NULL(malloc_fptr)
     struct linked_list *ll_list = malloc_fptr(sizeof(struct linked_list));
     NULL_NULL(ll_list)
     ll_list->head = NULL;
@@ -29,8 +30,7 @@ struct linked_list *linked_list_create(void)
 
 bool linked_list_delete(struct linked_list *ll)
 {
-    if (ll == NULL)
-        return true;
+    NULL_FALSE(ll)
 
     NULL_FALSE(free_fptr)
 
@@ -50,16 +50,14 @@ bool linked_list_delete(struct linked_list *ll)
 
 size_t linked_list_size(struct linked_list *ll)
 {
-    if (ll == NULL)
-    {
-        return SIZE_MAX;
-    }
+    NULL_SIZE_MAX(ll)
     return ll->size;
 }
 
 bool linked_list_insert_end(struct linked_list *ll,
                             unsigned int data)
 {
+    NULL_FALSE(ll)
     return linked_list_insert(ll, ll->size, data);
 }
 
@@ -73,9 +71,9 @@ bool linked_list_insert(struct linked_list *ll,
                         size_t index,
                         unsigned int data)
 {
+    NULL_FALSE(ll)
 
     size_t index_bak = index;
-    NULL_FALSE(ll)
     struct node *head = ll->head;
     struct node *prev = ll->head;
 
@@ -88,14 +86,11 @@ bool linked_list_insert(struct linked_list *ll,
 
     if (index != 0)
         return false;
-    if (malloc_fptr == NULL)
-        return false;
-
+    NULL_FALSE(malloc_fptr)
+    
     struct node *new_node = malloc_fptr(sizeof(struct node));
 
-    if (new_node == NULL)
-        return false;
-
+    NULL_FALSE(new_node)
     new_node->data = data;
     new_node->next = head;
     if (prev == NULL)
@@ -212,20 +207,16 @@ struct iterator *linked_list_create_iterator(struct linked_list *ll,
 
 bool linked_list_delete_iterator(struct iterator *iter)
 {
-    if (iter == NULL)
-        return false;
+    NULL_FALSE(iter)
     free_fptr(iter);
     return true;
 }
 
 bool linked_list_iterate(struct iterator *iter)
 {
-    if (iter == NULL)
-        return false;
-    if (iter->current_node == NULL)
-        return false;
-    if (iter->current_node->next == NULL)
-        return false;
+    NULL_FALSE(iter)
+    NULL_FALSE(iter->current_node)
+    NULL_FALSE(iter->current_node->next)
 
     iter->current_node = iter->current_node->next;
     iter->current_index++;
